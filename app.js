@@ -387,15 +387,43 @@ function saveSale(sale) {
   );
 }
 
-searchEl.addEventListener("input", () => {
+const categoryButtons = document.querySelectorAll(".category-btn");
+
+let selectedCategory = "All";
+
+function filterMenu() {
   const search = searchEl.value.trim().toLowerCase();
 
-  const filtered = menuItems.filter(item =>
-    item.name.toLowerCase().includes(search) ||
-    item.category.toLowerCase().includes(search)
-  );
+  const filtered = menuItems.filter(item => {
+    const matchesCategory =
+      selectedCategory === "All" ||
+      item.category === selectedCategory;
+
+    const matchesSearch =
+      item.name.toLowerCase().includes(search) ||
+      item.category.toLowerCase().includes(search);
+
+    return matchesCategory && matchesSearch;
+  });
 
   renderMenu(filtered);
+}
+
+searchEl.addEventListener("input", filterMenu);
+
+categoryButtons.forEach(button => {
+  button.addEventListener("click", () => {
+
+    selectedCategory = button.dataset.category;
+
+    categoryButtons.forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    filterMenu();
+  });
 });
 
 discountInput.addEventListener("input", updateTotals);
