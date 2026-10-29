@@ -369,112 +369,6 @@ function completeSale() {
 
   saveSale(sale);
   updateSalesDashboard();
-  function renderSalesHistory() {
-  const salesHistory = document.getElementById("salesHistory");
-
-  if (!salesHistory) return;
-
-  const sales = JSON.parse(
-    localStorage.getItem("afriNoorSales") || "[]"
-  );
-
-  if (sales.length === 0) {
-    salesHistory.innerHTML = `
-      <div class="history-empty">
-        No completed sales yet.
-      </div>
-    `;
-    return;
-  }
-
-  const rows = sales
-    .slice()
-    .reverse()
-    .map(sale => {
-      const date = new Date(sale.date);
-
-      const dateText = date.toLocaleDateString();
-      const timeText = date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-
-      const items = sale.items
-        .map(item => {
-          const size = item.size
-            ? ` (${item.size})`
-            : "";
-
-          return `${item.name}${size} × ${item.quantity}`;
-        })
-        .join("<br>");
-
-      return `
-        <tr>
-          <td>#${sale.id}</td>
-
-          <td>
-            ${dateText}<br>
-            ${timeText}
-          </td>
-
-          <td class="history-items">
-            ${items}
-          </td>
-
-          <td class="history-total">
-            ${money(sale.total)}
-          </td>
-
-          <td>
-            ${money(sale.payment)}
-          </td>
-
-          <td>
-            ${money(sale.change)}
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
-
-  salesHistory.innerHTML = `
-    <div class="history-table-wrapper">
-
-      <table class="history-table">
-
-        <thead>
-          <tr>
-            <th>Order</th>
-            <th>Date & Time</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Payment</th>
-            <th>Change</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          ${rows}
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-}
-
-const refreshHistory =
-  document.getElementById("refreshHistory");
-
-if (refreshHistory) {
-  refreshHistory.addEventListener(
-    "click",
-    renderSalesHistory
-  );
-}
-
-renderSalesHistory();
 
   showToast(
     `Sale completed! Change: ${money(sale.change)}`
@@ -613,3 +507,110 @@ if (refreshSales) {
 }
 
 updateSalesDashboard();
+
+function renderSalesHistory() {
+  const salesHistory = document.getElementById("salesHistory");
+
+  if (!salesHistory) return;
+
+  const sales = JSON.parse(
+    localStorage.getItem("afriNoorSales") || "[]"
+  );
+
+  if (sales.length === 0) {
+    salesHistory.innerHTML = `
+      <div class="history-empty">
+        No completed sales yet.
+      </div>
+    `;
+    return;
+  }
+
+  const rows = sales
+    .slice()
+    .reverse()
+    .map(sale => {
+      const date = new Date(sale.date);
+
+      const dateText = date.toLocaleDateString();
+      const timeText = date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      const items = sale.items
+        .map(item => {
+          const size = item.size
+            ? ` (${item.size})`
+            : "";
+
+          return `${item.name}${size} × ${item.quantity}`;
+        })
+        .join("<br>");
+
+      return `
+        <tr>
+          <td>#${sale.id}</td>
+
+          <td>
+            ${dateText}<br>
+            ${timeText}
+          </td>
+
+          <td class="history-items">
+            ${items}
+          </td>
+
+          <td class="history-total">
+            ${money(sale.total)}
+          </td>
+
+          <td>
+            ${money(sale.payment)}
+          </td>
+
+          <td>
+            ${money(sale.change)}
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  salesHistory.innerHTML = `
+    <div class="history-table-wrapper">
+
+      <table class="history-table">
+
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Date & Time</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          ${rows}
+        </tbody>
+
+      </table>
+
+    </div>
+  `;
+}
+
+const refreshHistory =
+  document.getElementById("refreshHistory");
+
+if (refreshHistory) {
+  refreshHistory.addEventListener(
+    "click",
+    renderSalesHistory
+  );
+}
+
+renderSalesHistory();
