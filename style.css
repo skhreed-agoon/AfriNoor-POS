@@ -393,3 +393,84 @@ button {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* SALES HISTORY */
+
+.sales-history {
+  margin-top: 30px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.history-header h2 {
+  margin: 0 0 5px;
+  font-size: 22px;
+}
+
+.history-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.history-empty {
+  padding: 30px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.history-table-wrapper {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 750px;
+}
+
+.history-table th,
+.history-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.history-table th {
+  background: #f9fafb;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.history-table td {
+  font-size: 14px;
+}
+
+.history-items {
+  line-height: 1.6;
+}
+
+.history-total {
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .history-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
