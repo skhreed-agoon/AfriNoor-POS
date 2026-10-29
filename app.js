@@ -141,9 +141,9 @@ card.innerHTML = `
   <div class="price">${money(item.price)}</div>
 `;
 
-    card.addEventListener("click", () => {
-      addToCart(index, items);
-    });
+card.addEventListener("click", () => {
+  addToCart(menuItems.indexOf(item), menuItems);
+});
 
     menuEl.appendChild(card);
   });
@@ -151,6 +151,10 @@ card.innerHTML = `
 
 function addToCart(index, sourceItems = menuItems) {
   const item = sourceItems[index];
+
+  if (!item) {
+    return;
+  }
 
   const itemKey = `${item.name}-${item.size || ""}`;
 
