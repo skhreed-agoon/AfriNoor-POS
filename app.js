@@ -448,3 +448,61 @@ checkoutBtn.addEventListener("click", completeSale);
 updateDate();
 renderMenu();
 renderCart();
+
+function updateSalesDashboard() {
+  const sales = JSON.parse(
+    localStorage.getItem("afriNoorSales") || "[]"
+  );
+
+  const today = new Date().toDateString();
+
+  const todaySales = sales.filter(sale =>
+    new Date(sale.date).toDateString() === today
+  );
+
+  const totalSales = todaySales.reduce(
+    (sum, sale) => sum + Number(sale.total || 0),
+    0
+  );
+
+  const totalOrders = todaySales.length;
+
+  const totalItems = todaySales.reduce(
+    (sum, sale) =>
+      sum +
+      sale.items.reduce(
+        (itemSum, item) =>
+          itemSum + Number(item.quantity || 0),
+        0
+      ),
+    0
+  );
+
+  const totalDiscount = todaySales.reduce(
+    (sum, sale) => sum + Number(sale.discount || 0),
+    0
+  );
+
+  document.getElementById("todaySales").textContent =
+    money(totalSales);
+
+  document.getElementById("todayOrders").textContent =
+    totalOrders;
+
+  document.getElementById("todayItems").textContent =
+    totalItems;
+
+  document.getElementById("todayDiscount").textContent =
+    money(totalDiscount);
+}
+
+const refreshSales = document.getElementById("refreshSales");
+
+if (refreshSales) {
+  refreshSales.addEventListener(
+    "click",
+    updateSalesDashboard
+  );
+}
+
+updateSalesDashboard();
