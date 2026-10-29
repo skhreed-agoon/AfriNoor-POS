@@ -73,6 +73,7 @@ const menuItems = [
   { name: "Chef's Special Mutton Haleem", price: 350, category: "Haleem", size: "250 gm" },
   { name: "Chef's Special Mutton Haleem", price: 650, category: "Haleem", size: "500 gm" },
   { name: "Chef's Special Mutton Haleem", price: 850, category: "Haleem", size: "750 gm" }
+  ];
 
 let cart = [];
 
