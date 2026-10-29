@@ -142,6 +142,28 @@ function renderMenu(items = menuItems) {
 function addToCart(index, sourceItems = menuItems) {
   const item = sourceItems[index];
 
+  const itemKey = `${item.name}-${item.size || ""}`;
+
+  const existing = cart.find(product =>
+    product.key === itemKey
+  );
+
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({
+      key: itemKey,
+      name: item.name,
+      price: item.price,
+      category: item.category,
+      size: item.size || "",
+      quantity: 1
+    });
+  }
+
+  renderCart();
+}
+
   const existing = cart.find(product => product.name === item.name);
 
   if (existing) {
