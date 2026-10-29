@@ -81,6 +81,36 @@ body {
   border-color: #2563eb;
 }
 
+.categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.category-btn {
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  padding: 9px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.category-btn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.category-btn.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+}
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
