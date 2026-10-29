@@ -1,12 +1,79 @@
 const menuItems = [
-  { name: "Chicken Tehari", price: 180, category: "Rice" },
-  { name: "Beef Tehari", price: 220, category: "Rice" },
+  // Rice
+  { name: "Plain Rice", price: 50, category: "Rice" },
+  { name: "Fried Rice", price: 140, category: "Rice" },
   { name: "Chicken Biryani", price: 200, category: "Rice" },
-  { name: "Beef Haleem", price: 200, category: "Special" },
-  { name: "Loitta Shutki Bhorta", price: 120, category: "Bhorta" },
-  { name: "Chepa Shutki Bhorta", price: 120, category: "Bhorta" },
-  { name: "Plain Polao", price: 100, category: "Rice" },
-  { name: "Chicken Roast", price: 180, category: "Main" }
+  { name: "Chicken Bhuna Khichuri", price: 260, category: "Rice" },
+  { name: "Plain Khichuri Rice", price: 100, category: "Rice" },
+  { name: "Plain Polao Rice", price: 100, category: "Rice" },
+
+  // Bhorta
+  { name: "Dal Bhorta", price: 30, category: "Bhorta" },
+  { name: "Alu Bhorta", price: 30, category: "Bhorta" },
+  { name: "Begun Bhorta", price: 40, category: "Bhorta" },
+  { name: "Tomato Bhorta", price: 50, category: "Bhorta" },
+  { name: "Chepa Shutki Bhorta", price: 50, category: "Bhorta" },
+  { name: "Egg Bhorta", price: 80, category: "Bhorta" },
+  { name: "Loitta Shutki Bhorta", price: 50, category: "Bhorta" },
+
+  // Curry
+  { name: "Rui Fish Curry", price: 250, category: "Curry" },
+  { name: "Chingri Bhuna", price: 350, category: "Curry" },
+  { name: "Doi Masala Egg Bhuna", price: 100, category: "Curry" },
+  { name: "Lemon Daal", price: 70, category: "Curry" },
+  { name: "Egg with Fulkopi Curry", price: 120, category: "Curry" },
+  { name: "Broiler Chicken Curry", price: 170, category: "Curry" },
+  { name: "Chicken Roast", price: 180, category: "Curry" },
+  { name: "Deshi Chicken Curry", price: 300, category: "Curry" },
+  { name: "Beef Laal Bhuna", price: 300, category: "Curry" },
+  { name: "Mutton Laal Bhuna", price: 330, category: "Curry" },
+  { name: "Mixed Vegetable", price: 80, category: "Curry" },
+  { name: "Duck Bhuna", price: 400, category: "Curry" },
+  { name: "Egg Bhuna", price: 60, category: "Curry" },
+  { name: "Beef Bot Bhuna", price: 280, category: "Curry" },
+  { name: "Plain Daal", price: 40, category: "Curry" },
+  { name: "Daal Bhuna", price: 50, category: "Curry" },
+  { name: "Sonali Chicken Curry", price: 220, category: "Curry" },
+  { name: "Creamy Butter Cheese Chicken", price: 380, category: "Curry" },
+  { name: "Pabda Fish Curry", price: 230, category: "Curry" },
+
+  // Combo
+  { name: "Combo 1", price: 260, category: "Combo" },
+  { name: "Combo 2", price: 300, category: "Combo" },
+  { name: "Combo 3", price: 180, category: "Combo" },
+  { name: "Combo 4", price: 350, category: "Combo" },
+  { name: "Combo 5", price: 250, category: "Combo" },
+  { name: "Combo 6", price: 400, category: "Combo" },
+
+  // Snacks
+  { name: "Chef's Special Fried Chicken", price: 280, category: "Snacks" },
+  { name: "Piyaju", price: 15, category: "Snacks" },
+  { name: "Alu Chop", price: 15, category: "Snacks" },
+  { name: "Egg Chop", price: 40, category: "Snacks" },
+  { name: "Chotpoti", price: 80, category: "Snacks" },
+  { name: "Egg Omelette", price: 50, category: "Snacks" },
+
+  // Paratha
+  { name: "Plain Paratha", price: 35, category: "Paratha" },
+  { name: "Sweet Paratha", price: 40, category: "Paratha" },
+
+  // Bhaji
+  { name: "Begun Bhaji", price: 50, category: "Bhaji" },
+  { name: "Alu Bhaji", price: 50, category: "Bhaji" },
+
+  // Haleem
+  { name: "Chef's Special Beef Haleem", price: 280, category: "Haleem", size: "250 gm" },
+  { name: "Chef's Special Beef Haleem", price: 480, category: "Haleem", size: "500 gm" },
+  { name: "Chef's Special Beef Haleem", price: 680, category: "Haleem", size: "750 gm" },
+
+  { name: "Chef's Special Beef Bot Haleem", price: 250, category: "Haleem", size: "250 gm" },
+  { name: "Chef's Special Beef Bot Haleem", price: 450, category: "Haleem", size: "500 gm" },
+  { name: "Chef's Special Beef Bot Haleem", price: 650, category: "Haleem", size: "750 gm" },
+
+  { name: "Chef's Special Mutton Haleem", price: 350, category: "Haleem", size: "250 gm" },
+  { name: "Chef's Special Mutton Haleem", price: 650, category: "Haleem", size: "500 gm" },
+  { name: "Chef's Special Mutton Haleem", price: 850, category: "Haleem", size: "750 gm" }
+];
 ];
 
 let cart = [];
