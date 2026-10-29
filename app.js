@@ -123,13 +123,23 @@ function renderMenu(items = menuItems) {
     const card = document.createElement("div");
     card.className = "menu-item";
 
-    card.innerHTML = `
-      <h3>${item.name}</h3>
-      <p style="color:#6b7280;font-size:13px;margin-bottom:10px;">
-        ${item.category}
-      </p>
-      <div class="price">${money(item.price)}</div>
-    `;
+card.innerHTML = `
+  <h3>${item.name}</h3>
+
+  <p style="color:#6b7280;font-size:13px;margin-bottom:6px;">
+    ${item.category}
+  </p>
+
+  ${
+    item.size
+      ? `<p style="color:#374151;font-size:13px;margin-bottom:8px;">
+          ${item.size}
+        </p>`
+      : ""
+  }
+
+  <div class="price">${money(item.price)}</div>
+`;
 
     card.addEventListener("click", () => {
       addToCart(index, items);
@@ -187,10 +197,19 @@ function renderCart() {
       row.innerHTML = `
         <div class="cart-item-top">
           <div>
-            <div class="cart-item-name">${item.name}</div>
-            <div style="font-size:13px;color:#6b7280;margin-top:4px;">
-              ${money(item.price)} each
-            </div>
+<div class="cart-item-name">${item.name}</div>
+
+${
+  item.size
+    ? `<div style="font-size:13px;color:#374151;margin-top:4px;">
+        ${item.size}
+      </div>`
+    : ""
+}
+
+<div style="font-size:13px;color:#6b7280;margin-top:4px;">
+  ${money(item.price)} each
+</div>
           </div>
 
           <div class="cart-item-price">
