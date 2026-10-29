@@ -1,21 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>AfriNoor Kitchen POS</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <h1>AfriNoor Kitchen</h1>
+  <header class="topbar">
+    <div>
+      <h1>AfriNoor Kitchen</h1>
+      <p>Point of Sale</p>
+    </div>
 
-  <h2>Point of Sale</h2>
+    <div id="today"></div>
+  </header>
 
-  <p>Welcome to AfriNoor Kitchen POS.</p>
+  <main class="layout">
+
+    <!-- MENU -->
+    <section class="menu-panel">
+
+      <div class="section-head">
+
+        <div>
+          <h2>Menu</h2>
+          <p>Select a food item to add it to the order.</p>
+        </div>
+
+        <input
+          id="search"
+          type="search"
+          placeholder="Search food..."
+        >
+
+      </div>
+
+      <div id="menu" class="menu-grid"></div>
+
+    </section>
+
+
+    <!-- CURRENT ORDER -->
+    <aside class="order-panel">
+
+      <div class="section-head">
+
+        <div>
+          <h2>Current Order</h2>
+          <p id="count">0 items</p>
+        </div>
+
+        <button id="clear" class="secondary">
+          Clear
+        </button>
+
+      </div>
+
+
+      <div id="cart" class="cart"></div>
+
+
+      <div class="totals">
+
+        <div>
+          <span>Subtotal</span>
+          <strong id="subtotal">৳0</strong>
+        </div>
+
+        <div>
+          <span>Discount</span>
+          <strong id="discount">৳0</strong>
+        </div>
+
+        <div class="grand">
+          <span>Total</span>
+          <strong id="total">৳0</strong>
+        </div>
+
+      </div>
+
+
+      <label>
+        Discount (৳)
+
+        <input
+          id="discountInput"
+          type="number"
+          min="0"
+          value="0"
+        >
+
+      </label>
+
+
+      <label>
+        Payment received (৳)
+
+        <input
+          id="paymentInput"
+          type="number"
+          min="0"
+          value="0"
+        >
+
+      </label>
+
+
+      <div class="change">
+
+        <span>Change</span>
+
+        <strong id="change">৳0</strong>
+
+      </div>
+
+
+      <button id="checkout" class="checkout">
+        Complete Sale
+      </button>
+
+    </aside>
+
+  </main>
+
+
+  <div id="toast" class="toast"></div>
+
+
+  <script src="app.js"></script>
 
 </body>
-
 </html>
