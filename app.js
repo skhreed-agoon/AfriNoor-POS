@@ -614,3 +614,193 @@ if (refreshHistory) {
 }
 
 renderSalesHistory();
+
+/* ADVANCED SALES REPORT */
+
+function updateAdvancedReport() {
+  const sales = JSON.parse(
+    localStorage.getItem("afriNoorSales") || "[]"
+  );
+
+  const now = new Date();
+
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  );
+
+  const startOfWeek = new Date(startOfToday);
+
+  const day = startOfWeek.getDay();
+  const diffToMonday = day === 0 ? 6 : day - 1;
+
+  startOfWeek.setDate(
+    startOfWeek.getDate() - diffToMonday
+  );
+
+  const startOfMonth = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  );
+
+  function getPeriodSales(startDate) {
+    return sales.filter(sale => {
+      const saleDate = new Date(sale.date);
+
+      return (
+        saleDate >= startDate &&
+        saleDate <= now
+      );
+    });
+  }
+
+  function getItemsSold(periodSales) {
+    return periodSales.reduce(
+      (sum, sale) => {
+
+        if (!Array.isArray(sale.items)) {
+          return sum;
+        }
+
+        return sum + sale.items.reduce(
+          (itemSum, item) =>
+            itemSum +
+            Number(item.quantity || 0),
+          0
+        );
+      },
+      0
+    );
+  }
+
+  function getSalesTotal(periodSales) {
+    return periodSales.reduce(
+      (sum, sale) =>
+        sum + Number(sale.total || 0),
+      0
+    );
+  }
+
+  function updatePeriod(
+    prefix,
+    periodSales
+  ) {
+    const totalSales =
+      getSalesTotal(periodSales);
+
+    const orders =
+      periodSales.length;
+
+    const items =
+      getItemsSold(periodSales);
+
+    const average =
+      orders > 0
+        ? totalSales / orders
+        : 0;
+
+    document.getElementById(
+      `${prefix}Sales`
+    ).textContent = money(totalSales);
+
+    document.getElementById(
+      `${prefix}Orders`
+    ).textContent = orders;
+
+    document.getElementById(
+      `${prefix}Items`
+    ).textContent = items;
+
+    document.getElementById(
+      `${prefix}Average`
+    ).textContent =
+      money(Math.round(average));
+  }
+
+  updatePeriod(
+    "reportToday",
+    getPeriodSales(startOfToday)
+  );
+
+  updatePeriod(
+    "reportWeek",
+    getPeriodSales(startOfWeek)
+  );
+
+  updatePeriod(
+    "reportMonth",
+    getPeriodSales(startOfMonth)
+  );
+
+  const itemTotals = {};
+
+  sales.forEach(sale => {
+
+    if (!Array.isArray(sale.items)) {
+      return;
+    }
+
+    sale.items.forEach(item => {
+
+      const key = item.size
+        ? `${item.name} (${item.size})`
+        : item.name;
+
+      itemTotals[key] =
+        (itemTotals[key] || 0) +
+        Number(item.quantity || 0);
+    });
+  });
+
+  const bestSellingItems =
+    document.getElementById(
+      "bestSellingItems"
+    );
+
+  const bestSellers =
+    Object.entries(itemTotals)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+  if (bestSellers.length === 0) {
+
+    bestSellingItems.innerHTML =
+      "No sales yet.";
+
+    return;
+  }
+
+  bestSellingItems.innerHTML =
+    bestSellers
+      .map(([name, quantity]) => `
+        <div class="best-seller-row">
+
+          <span class="best-seller-name">
+            ${name}
+          </span>
+
+          <span class="best-seller-quantity">
+            ${quantity} sold
+          </span>
+
+        </div>
+      `)
+      .join("");
+}
+
+const refreshReport =
+  document.getElementById(
+    "refreshReport"
+  );
+
+if (refreshReport) {
+
+  refreshReport.addEventListener(
+    "click",
+    updateAdvancedReport
+  );
+}
+
+updateAdvancedReport();
