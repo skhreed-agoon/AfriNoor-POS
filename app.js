@@ -16,109 +16,197 @@ const cartEl = document.getElementById("cart");
 const searchEl = document.getElementById("search");
 const discountInput = document.getElementById("discountInput");
 const paymentInput = document.getElementById("paymentInput");
+
 const subtotalEl = document.getElementById("subtotal");
 const discountEl = document.getElementById("discount");
 const totalEl = document.getElementById("total");
 const changeEl = document.getElementById("change");
 const countEl = document.getElementById("count");
-const toastEl = document.getElementById("toast");
+const todayEl = document.getElementById("today");
+const clearBtn = document.getElementById("clear");
+const checkoutBtn = document.getElementById("checkout");
 
-function money(value) {
-  return `৳${Number(value).toLocaleString("en-BD")}`;
+function money(amount) {
+  return `৳${Number(amount).toLocaleString("en-BD")}`;
 }
 
-function renderMenu() {
-  const query = searchEl.value.trim().toLowerCase();
+function updateDate() {
+  const now = new Date();
 
-  const filtered = menuItems.filter(item =>
-    item.name.toLowerCase().includes(query) ||
-    item.category.toLowerCase().includes(query)
-  );
-
-  menuEl.innerHTML = filtered.map(item => `
-    <button class="menu-card" onclick="addToCart(${menuItems.indexOf(item)})">
-      <span class="category">${item.category}</span>
-      <strong>${item.name}</strong>
-      <span class="price">${money(item.price)}</span>
-    </button>
-  `).join("") || `<p class="empty">No food found.</p>`;
+  todayEl.textContent = now.toLocaleDateString("en-BD", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
 }
 
-function addToCart(index) {
-  const item = menuItems[index];
-  const existing = cart.find(cartItem => cartItem.name === item.name);
+function renderMenu(items = menuItems) {
+  menuEl.innerHTML = "";
 
-  if (existing) {
-    existing.qty++;
-  } else {
-    cart.push({ ...item, qty: 1 });
+  if (items.length === 0) {
+    menuEl.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:#9ca3af;">
+        No food found.
+      </div>
+    `;
+    return;
   }
 
-  renderCart();
+  items.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "menu-item";
+
+    card.innerHTML = `
+      <h3>${item.name}</h3>
+      <p style="color:#6b7280;font-size:13px;margin-bottom:10px;">
+        ${item.category}
+      </p>
+      <div class="price">${money(item.price)}</div>
+    `;
+
+    card.addEventListener("click", () => {
+      addToCart(index, items);
+    });
+
+    menuEl.appendChild(card);
+  });
 }
 
-function changeQty(index, amount) {
-  cart[index].qty += amount;
+function addToCart(index, sourceItems = menuItems) {
+  const item = sourceItems[index];
 
-  if (cart[index].qty <= 0) {
-    cart.splice(index, 1);
+  const existing = cart.find(product => product.name === item.name);
+
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({
+      name: item.name,
+      price: item.price,
+      quantity: 1
+    });
   }
 
   renderCart();
 }
 
 function renderCart() {
-  if (!cart.length) {
+  if (cart.length === 0) {
     cartEl.innerHTML = `
-      <div class="empty">
-        Your order is empty.<br>
-        Select food from the menu.
+      <div class="cart-empty">
+        <div style="font-size:40px;margin-bottom:10px;">🛒</div>
+        <p>No items added yet.</p>
+        <p style="font-size:13px;margin-top:5px;">
+          Click a food item to add it.
+        </p>
       </div>
     `;
   } else {
-    cartEl.innerHTML = cart.map((item, index) => `
-      <div class="cart-item">
-        <div>
-          <strong>${item.name}</strong>
-          <small>${money(item.price)} × ${item.qty}</small>
+    cartEl.innerHTML = "";
+
+    cart.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+
+      const row = document.createElement("div");
+      row.className = "cart-item";
+
+      row.innerHTML = `
+        <div class="cart-item-top">
+          <div>
+            <div class="cart-item-name">${item.name}</div>
+            <div style="font-size:13px;color:#6b7280;margin-top:4px;">
+              ${money(item.price)} each
+            </div>
+          </div>
+
+          <div class="cart-item-price">
+            ${money(itemTotal)}
+          </div>
         </div>
 
-        <div class="qty">
-          <button onclick="changeQty(${index}, -1)">−</button>
-          <span>${item.qty}</span>
-          <button onclick="changeQty(${index}, 1)">+</button>
+        <div class="quantity-controls">
+          <button onclick="changeQuantity(${index}, -1)">−</button>
+
+          <strong>${item.quantity}</strong>
+
+          <button onclick="changeQuantity(${index}, 1)">+</button>
+
+          <button
+            onclick="removeItem(${index})"
+            style="
+              margin-left:auto;
+              background:#fee2e2;
+              color:#b91c1c;
+            "
+          >
+            ×
+          </button>
         </div>
-      </div>
-    `).join("");
+      `;
+
+      cartEl.appendChild(row);
+    });
   }
 
   updateTotals();
 }
 
+function changeQuantity(index, amount) {
+  cart[index].quantity += amount;
+
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
+
+  renderCart();
+}
+
+function removeItem(index) {
+  cart.splice(index, 1);
+  renderCart();
+}
+
+function getSubtotal() {
+  return cart.reduce((sum, item) => {
+    return sum + item.price * item.quantity;
+  }, 0);
+}
+
+function getDiscount() {
+  const value = Number(discountInput.value);
+
+  if (isNaN(value) || value < 0) {
+    return 0;
+  }
+
+  return Math.min(value, getSubtotal());
+}
+
+function getTotal() {
+  return Math.max(0, getSubtotal() - getDiscount());
+}
+
+function getPayment() {
+  const value = Number(paymentInput.value);
+
+  if (isNaN(value) || value < 0) {
+    return 0;
+  }
+
+  return value;
+}
+
 function updateTotals() {
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
-
-  const discount = Math.max(
-    0,
-    Number(discountInput.value) || 0
-  );
-
-  const total = Math.max(0, subtotal - discount);
-
-  const payment = Math.max(
-    0,
-    Number(paymentInput.value) || 0
-  );
-
+  const subtotal = getSubtotal();
+  const discount = getDiscount();
+  const total = getTotal();
+  const payment = getPayment();
   const change = Math.max(0, payment - total);
 
-  const itemCount = cart.reduce(
-    (sum, item) => sum + item.qty,
-    0
-  );
+  const itemCount = cart.reduce((sum, item) => {
+    return sum + item.quantity;
+  }, 0);
 
   subtotalEl.textContent = money(subtotal);
   discountEl.textContent = money(discount);
@@ -126,7 +214,7 @@ function updateTotals() {
   changeEl.textContent = money(change);
 
   countEl.textContent =
-    `${itemCount} item${itemCount === 1 ? "" : "s"}`;
+    `${itemCount} ${itemCount === 1 ? "item" : "items"}`;
 }
 
 function clearCart() {
@@ -138,20 +226,32 @@ function clearCart() {
   renderCart();
 }
 
+function showToast(message) {
+  let toast = document.getElementById("toast");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.className = "toast";
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2500);
+}
+
 function completeSale() {
-  if (!cart.length) {
-    showToast("Add food to the order first.");
+  if (cart.length === 0) {
+    showToast("Please add food items first.");
     return;
   }
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
-
-  const discount = Number(discountInput.value) || 0;
-  const total = Math.max(0, subtotal - discount);
-  const payment = Number(paymentInput.value) || 0;
+  const total = getTotal();
+  const payment = getPayment();
 
   if (payment < total) {
     showToast(
@@ -160,49 +260,67 @@ function completeSale() {
     return;
   }
 
+  const sale = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    items: cart.map(item => ({ ...item })),
+    subtotal: getSubtotal(),
+    discount: getDiscount(),
+    total: total,
+    payment: payment,
+    change: payment - total
+  };
+
+  saveSale(sale);
+
   showToast(
-    `Sale completed. Change: ${money(payment - total)}`
+    `Sale completed! Change: ${money(sale.change)}`
   );
 
-  clearCart();
-}
-
-function showToast(message) {
-  toastEl.textContent = message;
-
-  toastEl.classList.add("show");
-
   setTimeout(() => {
-    toastEl.classList.remove("show");
-  }, 2500);
+    clearCart();
+  }, 800);
 }
 
-searchEl.addEventListener("input", renderMenu);
+function saveSale(sale) {
+  const sales = JSON.parse(
+    localStorage.getItem("afriNoorSales") || "[]"
+  );
 
-discountInput.addEventListener(
-  "input",
-  updateTotals
-);
+  sales.push(sale);
 
-paymentInput.addEventListener(
-  "input",
-  updateTotals
-);
+  localStorage.setItem(
+    "afriNoorSales",
+    JSON.stringify(sales)
+  );
+}
 
-document
-  .getElementById("clear")
-  .addEventListener("click", clearCart);
+searchEl.addEventListener("input", () => {
+  const search = searchEl.value.trim().toLowerCase();
 
-document
-  .getElementById("checkout")
-  .addEventListener("click", completeSale);
+  const filtered = menuItems.filter(item =>
+    item.name.toLowerCase().includes(search) ||
+    item.category.toLowerCase().includes(search)
+  );
 
-document.getElementById("today").textContent =
-  new Date().toLocaleDateString("en-BD", {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-  });
+  renderMenu(filtered);
+});
 
+discountInput.addEventListener("input", updateTotals);
+paymentInput.addEventListener("input", updateTotals);
+
+clearBtn.addEventListener("click", () => {
+  if (cart.length === 0) {
+    return;
+  }
+
+  if (confirm("Clear the current order?")) {
+    clearCart();
+  }
+});
+
+checkoutBtn.addEventListener("click", completeSale);
+
+updateDate();
 renderMenu();
 renderCart();
