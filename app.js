@@ -368,6 +368,7 @@ function completeSale() {
   };
 
   saveSale(sale);
+  updateSalesDashboard();
 
   showToast(
     `Sale completed! Change: ${money(sale.change)}`
