@@ -164,21 +164,6 @@ function addToCart(index, sourceItems = menuItems) {
   renderCart();
 }
 
-  const existing = cart.find(product => product.name === item.name);
-
-  if (existing) {
-    existing.quantity++;
-  } else {
-    cart.push({
-      name: item.name,
-      price: item.price,
-      quantity: 1
-    });
-  }
-
-  renderCart();
-}
-
 function renderCart() {
   if (cart.length === 0) {
     cartEl.innerHTML = `
